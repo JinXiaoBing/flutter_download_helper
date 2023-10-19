@@ -71,8 +71,8 @@ class DownloadManager {
     );
   }
 
-  void cancelDownload() {
-    downloadStrategy.cancelDownload();
+  Future<void> cancelDownload() async {
+    await downloadStrategy.cancelDownload();
   }
 
   Future<bool> openFile(String path) async {

@@ -48,7 +48,7 @@ class DioStrategy implements DownloadStrategy {
   }
 
   @override
-  void cancelDownload() {
+  Future cancelDownload() async{
     cancelToken?.cancel();
     cancelToken = null;
   }

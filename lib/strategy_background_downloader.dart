@@ -12,8 +12,8 @@ class BackgroundDownloaderStrategy implements DownloadStrategy {
   String? taskId;
 
   @override
-  void cancelDownload() {
-    FileDownloader().cancelTaskWithId(taskId ?? "");
+  Future<void> cancelDownload() async {
+    await FileDownloader().cancelTaskWithId(taskId ?? "");
   }
 
   @override

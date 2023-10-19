@@ -22,6 +22,6 @@ abstract class DownloadStrategy {
     OnDownloadedCountListener? onDownloadedCountListener,
   });
 
-  void cancelDownload();
+  Future cancelDownload();
   Future<bool> openFile(String path);
 }
