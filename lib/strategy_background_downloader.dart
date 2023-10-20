@@ -17,7 +17,7 @@ class BackgroundDownloaderStrategy implements DownloadStrategy {
   }
 
   @override
-  Future<DownloadState> downloadFile({required DownloadTaskInfo task, OnProgressListener? onProgressListener}) async {
+  Future<DownloadResult> downloadFile({required DownloadTaskInfo task, OnProgressListener? onProgressListener}) async {
     final downloadTask = await createDownloadTask(url: task.url, filename: task.fileName);
     taskId = downloadTask.taskId;
     final result = await FileDownloader().download(downloadTask,
@@ -39,22 +39,23 @@ class BackgroundDownloaderStrategy implements DownloadStrategy {
       task.downloadFilePath = path ?? "";
       task.downloadDirPath = File(path ?? "").parent.path;
       onProgressListener?.call(task);
-      return DownloadState.complete;
+
+      return DownloadResult(DownloadState.complete);
     }
     if (result.status == TaskStatus.notFound) {
-      return DownloadState.notFound;
+      return DownloadResult(DownloadState.notFound);
     }
     if (result.status == TaskStatus.canceled) {
-      return DownloadState.canceled;
+      return DownloadResult(DownloadState.canceled);
     }
     if (result.status == TaskStatus.paused) {
-      return DownloadState.paused;
+      return DownloadResult(DownloadState.paused);
     }
-    return DownloadState.failed;
+    return DownloadResult(DownloadState.failed,errorMsg:"${result.exception?.exceptionType}---${result.exception?.description}" );
   }
 
   @override
-  Future<DownloadState> downloadFiles(
+  Future<DownloadResult> downloadFiles(
       {required List<DownloadTaskInfo> tasks,
       OnProgressesListener? onProgressesListener,
       OnDownloadedCountListener? onDownloadedCountListener}) async {
@@ -63,7 +64,7 @@ class BackgroundDownloaderStrategy implements DownloadStrategy {
     for (int i = 0; i < tasks.length; i++) {
       final task = tasks[i];
 
-      final state = await downloadFile(
+      final result = await downloadFile(
         task: task,
         onProgressListener: (task) async {
           DateTime curDate = DateTime.now();
@@ -76,14 +77,14 @@ class BackgroundDownloaderStrategy implements DownloadStrategy {
           debugPrint("backgroundDownload下载：当前下载多个文件总进度为${tasks.toString()}");
         },
       );
-      if (state != DownloadState.complete) {
-        return state;
+      if (result.state != DownloadState.complete) {
+        return result;
       }
       downloadedCount++;
       debugPrint("backgroundDownload下载：已下载完成文件数量：$downloadedCount");
       onDownloadedCountListener?.call(downloadedCount);
     }
-    return DownloadState.complete;
+    return DownloadResult(DownloadState.complete);
   }
 
   Future<DownloadTask> createDownloadTask({

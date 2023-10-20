@@ -21,7 +21,7 @@ class DioStrategy implements DownloadStrategy {
   }
 
   @override
-  Future<DownloadState> downloadFile({
+  Future<DownloadResult> downloadFile({
     required DownloadTaskInfo task,
     OnProgressListener? onProgressListener,
   }) async {
@@ -42,9 +42,9 @@ class DioStrategy implements DownloadStrategy {
         },
       );
     } catch (e) {
-      return DownloadState.failed;
+      return  DownloadResult(DownloadState.failed,errorMsg: e.toString());  DownloadState.failed;
     }
-    return DownloadState.complete;
+    return  DownloadResult(DownloadState.complete);  DownloadState.failed;
   }
 
   @override
@@ -54,7 +54,7 @@ class DioStrategy implements DownloadStrategy {
   }
 
   @override
-  Future<DownloadState> downloadFiles({
+  Future<DownloadResult> downloadFiles({
     required List<DownloadTaskInfo> tasks,
     OnProgressesListener? onProgressesListener,
     OnDownloadedCountListener? onDownloadedCountListener,
@@ -74,8 +74,7 @@ class DioStrategy implements DownloadStrategy {
       debugPrint("dio下载：已下载完成文件数量：$downloadedCount");
       onDownloadedCountListener?.call(downloadedCount);
     }
-
-    return DownloadState.complete;
+    return DownloadResult(DownloadState.complete);
   }
 
   @override

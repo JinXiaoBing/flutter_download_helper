@@ -10,13 +10,13 @@ typedef OnDownloadedCountListener =  Function(int downloadedCount);
 
 abstract class DownloadStrategy {
   ///下载单一文件
-  Future<DownloadState> downloadFile({
+  Future<DownloadResult> downloadFile({
     required DownloadTaskInfo task,
     OnProgressListener? onProgressListener,
   });
 
   ///下载多个文件
-  Future<DownloadState> downloadFiles({
+  Future<DownloadResult> downloadFiles({
     required List<DownloadTaskInfo> tasks,
     OnProgressesListener? onProgressesListener,
     OnDownloadedCountListener? onDownloadedCountListener,

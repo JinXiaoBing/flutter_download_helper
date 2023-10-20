@@ -11,6 +11,14 @@ enum DownloadState {
   paused;
 }
 
+class DownloadResult{
+
+  late DownloadState state;
+  late String errorMsg;
+
+  DownloadResult(this.state,{this.errorMsg = ""});
+}
+
 class DownloadManager {
   static DownloadManager? _instance;
 
@@ -43,7 +51,7 @@ class DownloadManager {
     downloadStrategy.downloadFile(task: task, onProgressListener: onProgressListener);
   }
 
-  Future<DownloadState> downloadFiles({
+  Future<DownloadResult> downloadFiles({
     required List<String> urls,
     required List<String> fileNames,
     required String downloadDir,
@@ -52,7 +60,7 @@ class DownloadManager {
     OnDownloadedCountListener? onDownloadedCountListener,
   }) async {
     if (urls.length != fileNames.length) {
-      return DownloadState.failed;
+      return DownloadResult(DownloadState.failed);
     }
     List<DownloadTaskInfo> tasks = [];
     for (int i = 0; i < urls.length; i++) {
