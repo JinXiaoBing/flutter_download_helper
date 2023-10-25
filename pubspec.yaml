@@ -14,7 +14,7 @@ dependencies:
   background_downloader:
     git:
       url: https://github.com/JinXiaoBing/background_downloader.git
-      ref: main
+      ref: 1.0.0
 
 
 dev_dependencies:
