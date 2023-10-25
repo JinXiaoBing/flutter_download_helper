@@ -103,7 +103,7 @@ class BackgroundDownloaderStrategy implements DownloadStrategy {
         baseDirectory: BaseDirectory.temporary,
         updates: Updates.statusAndProgress,
         requiresWiFi: false,
-        retries: 0,
+        retries: 3,
         allowPause: true);
   }
 
