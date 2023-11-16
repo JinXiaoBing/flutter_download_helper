@@ -119,10 +119,13 @@ class BackgroundDownloaderStrategy implements DownloadStrategy {
     final fileName = path.basename(filePath);
     final destFilePath = path.join(moveDirPath, fileName);
     try {
-      await File(filePath).rename(destFilePath);
+      await File(filePath).copy(destFilePath);
     } on FileSystemException catch (e) {
       return null;
     }
+    try {
+      await File(filePath).delete();
+    } on FileSystemException catch (_) {}
     return destFilePath;
   }
 }
